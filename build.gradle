@@ -1,0 +1,24 @@
+
+plugins {
+    id 'base'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+// Copy website files into docs for GitHub Pages
+tasks.register('copyResourcesToDocs', Copy) {
+    from 'src/main/resources/static'
+    into 'docs'
+}
+
+// Build website
+tasks.register('buildWebsite', Copy) {
+    from 'src/main/resources/static'
+    into layout.buildDirectory.dir('website')
+}
+
+tasks.named('build') {
+    dependsOn 'copyResourcesToDocs'
+    dependsOn 'buildWebsite'
+}
