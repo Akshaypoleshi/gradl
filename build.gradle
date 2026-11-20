@@ -4,21 +4,24 @@ plugins {
 }
 
 group = 'org.example'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
-// Copy website files into docs for GitHub Pages
-tasks.register('copyResourcesToDocs', Copy) {
-    from 'src/main/resources/static'
-    into 'docs'
-}
-
-// Build website
+// Copy HTML, CSS and images
 tasks.register('buildWebsite', Copy) {
     from 'src/main/resources/static'
     into layout.buildDirectory.dir('website')
 }
 
+// Package website into ZIP
+tasks.register('packageWebsite', Zip) {
+    dependsOn tasks.named('buildWebsite')
+
+    from layout.buildDirectory.dir('website')
+    archiveFileName = 'tourism-website.zip'
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+}
+
+// Build and package website
 tasks.named('build') {
-    dependsOn 'copyResourcesToDocs'
-    dependsOn 'buildWebsite'
+    dependsOn tasks.named('packageWebsite')
 }
